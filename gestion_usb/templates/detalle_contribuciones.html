@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle de Contribuciones{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-3 shadow-sm">
+            <img src="{{ url_for('static', filename='img/avatar.png') }}" class="rounded-circle mx-auto d-block" width="120">
+            <hr>
+            <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+            <p><small><i>Facultad:</i> Facultad De Artes Integradas</small></p>
+            <p><strong>Cargo:</strong> {{ usuario.rol.nombre }}</p>
+            <p><strong>Correo:</strong> {{ usuario.correo }}</p>
+        </div>
+        <a href="{{ url_for('desempeno_bp.contribuciones_individuales') }}" class="btn btn-dark mt-3 w-100">← Volver</a>
+    </div>
+
+    <div class="col-md-8">
+        <div class="list-group shadow-sm">
+            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Competencias Transversales
+                <img src="{{ url_for('static', filename='img/icono_transversales.png') }}" height="30">
+            </a>
+            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Competencias Docentes
+                <img src="{{ url_for('static', filename='img/icono_docentes.png') }}" height="30">
+            </a>
+            <a href="{{ url_for('desempeno_bp.formulario_categoria', usuario_id=usuario.id, categoria_id=3) }}"
+                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Concentración de Propósitos
+                <img src="{{ url_for('static', filename='img/icono_propositos.png') }}" height="30">
+            </a>
+            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Factores Claves del Éxito
+                <img src="{{ url_for('static', filename='img/icono_exito.png') }}" height="30">
+            </a>
+            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Seguimiento a Proyectos
+                <img src="{{ url_for('static', filename='img/icono_proyectos.png') }}" height="30">
+            </a>
+            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Resultados
+                <img src="{{ url_for('static', filename='img/icono_resultados.png') }}" height="30">
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

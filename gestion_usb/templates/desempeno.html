@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block body_class %}gestion-scroll-off{% endblock %}
+
+{% block title %}Panel Principal{% endblock %}
+
+{% block content %}
+<div class="gestiondeldesempeno">
+    <h2 class="fw-bold main-title">Gestión del Desempeño</h2>
+    <hr class="divider0">
+    <p class="text-muted">Inicio / Gestión del Desempeño / Análisis Organizacional</p>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="rectangle-2104">
+                <h5 class="text-uppercase fw-bold">Contribuciones Individuales</h5>
+                <p class="text-muted">Accede a las categorías evaluativas <br>
+                    del equipo.</p>
+                <a href="{{ url_for('desempeno_bp.contribuciones_individuales') }}" class="stretched-link"></a>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="rectangle-2105">
+                <h5 class="text-uppercase fw-bold">Otras Contribuciones</h5>
+                <p class="text-muted">Visualiza información adicional <br>
+                    relacionada con el desempeño.</p>
+                <a href="{{ url_for('desempeno_bp.otras_contribuciones') }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    <img src="{{ url_for('static', filename='img/mariposa0.png')}}" class="mariposa1" />
+</div>
+
+
+
+{% endblock %}

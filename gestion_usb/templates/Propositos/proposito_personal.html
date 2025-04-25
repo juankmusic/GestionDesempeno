@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Propósitos Personales{% endblock %}
+
+{% block content %}
+<div class="container py-4">    
+    <!-- Encabezado -->
+    <div class="row align-items-center mb-4">
+        <div class="col-auto">
+            <img src="{{ url_for('static', filename='img/avatar.png') }}" class="rounded-circle" width="80">
+            <p class="fw-bold text-center mt-2">MONO MONSTER</p>
+        </div>
+        <div class="col">
+            <h3 class="fw-bold text-center">CONCERTACIÓN DE PROPÓSITOS PERSONALES</h3>
+            <p class="text-center text-muted">{{ proyecto.nombre }}</p>
+        </div>
+    </div>
+
+    <!-- Formulario para agregar propósito -->
+    <div class="card shadow-sm p-4 mb-4" style="border-radius: 12px;">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Especifique el propósito manifestado por el colaborador:</label>
+                <textarea name="descripcion" class="form-control" rows="4" placeholder="Escriba aquí..." required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="fecha" class="form-label">Fecha:</label>
+                <input type="date" name="fecha" class="form-control" value="{{ fecha_actual }}" required>
+            </div>
+            <input type="hidden" name="proyecto_id" value="{{ proyecto.id }}">
+            <div class="text-end">
+                <button type="submit" class="btn btn-outline-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Lista de seguimientos registrados -->
+    {% if seguimientos %}
+    <div class="card shadow-sm p-4 mb-4" style="border-radius: 12px;">
+        <h5 class="fw-bold mb-3">Seguimientos Registrados</h5>
+        <ul class="list-group list-group-flush">
+            {% for s in seguimientos %}
+            <li class="list-group-item">
+                <strong>{{ s.fecha.strftime('%Y-%m-%d') }}:</strong> {{ s.descripcion }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% else %}
+    <div class="text-center text-muted mb-4">
+        <p><strong>Falta seguimiento para este proyecto.</strong></p>
+    </div>
+    {% endif %}
+
+    <!-- Botón de volver -->
+    <div class="text-center mt-4">
+        <a href="{{ url_for('desempeno_bp.proposito_estrategico') }}" class="btn btn-dark px-5">VOLVER</a>
+    </div>
+</div>
+{% endblock %}

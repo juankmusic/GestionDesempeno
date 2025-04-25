@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Detalle del Colaborador{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Panel izquierdo: Información del colaborador -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm p-4 text-center">
+                <img src="{{ url_for('static', filename='img/avatar.png') }}" class="rounded-circle mb-3" width="100" alt="Avatar">
+                <h5 class="fw-bold">{{ colaborador.nombre }}</h5>
+                <p class="text-muted small mb-1">{{ colaborador.cargo.nombre if colaborador.cargo else 'Sin cargo' }}</p>
+                <p class="text-muted small mb-1">{{ colaborador.rol.nombre if colaborador.rol else 'Sin rol' }}</p>
+                <p class="text-muted small mb-1">{{ colaborador.equipo.nombre if colaborador.equipo else 'Sin equipo' }}</p>
+                <p class="text-muted small"><i class="bi bi-envelope"></i> {{ colaborador.correo }}</p>
+            </div>
+        </div>
+
+        <!-- Panel derecho: Categorías evaluativas -->
+        <div class="col-md-8">
+            <h4 class="fw-bold mb-3">Categorías Evaluativas</h4>
+            <div class="row g-3">
+                {% for cat in categorias %}
+                <div class="col-md-6">
+                    {% if cat.id == 3 %}
+                        <a href="{{ url_for('desempeno_bp.concentracion_propositos') }}"
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center shadow-sm p-3 text-decoration-none">
+                            {{ cat.nombre }}
+                            <img src="{{ url_for('static', filename='img/' ~ cat.icono) }}" height="30">
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('desempeno_bp.formulario_categoria', usuario_id=colaborador.id, categoria_id=cat.id) }}"
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center shadow-sm p-3 text-decoration-none">
+                            {{ cat.nombre }}
+                            <img src="{{ url_for('static', filename='img/' ~ cat.icono) }}" height="30">
+                        </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="titulo">GESTIÓN DEL DESEMPEÑO</h1>
+<p class="breadcrumb">Inicio / Gestión del Desempeño / Análisis Organizacional</p>
+
+<h2 class="seccion">OTRAS CONTRIBUCIONES</h2>
+
+<div class="contenedor-tarjetas">
+
+  <!-- Tarjeta 1: Análisis Organizacional -->
+  <a href="{{ url_for('desempeno_bp.analisis_organizacional') }}" class="tarjeta-link">
+    <div class="tarjeta">
+      <h3>Análisis Organizacional</h3>
+      <p>Lorem Ipsum Dolor Se Sienta Amet, Consectetur Adipisicing Elit...</p>
+      <img src="{{ url_for('static', filename='img/analisis_icon.png') }}" alt="Icono Análisis">
+    </div>
+  </a>
+
+  <!-- Tarjeta 2: Dashboard / Reportes -->
+  <a href="{{ url_for('reportes_bp.dashboard_reportes') }}" class="tarjeta-link">
+    <div class="tarjeta">
+      <h3>Dashboard / Reportes</h3>
+      <p>Lorem Ipsum Dolor Se Sienta Amet, Consectetur Adipisicing Elit...</p>
+      <img src="{{ url_for('static', filename='img/reportes_icon.png') }}" alt="Icono Reportes">
+    </div>
+  </a>
+
+</div>
+{% endblock %}

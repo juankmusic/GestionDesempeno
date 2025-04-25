@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="contenedor-dashboard-reportes">
+
+  <h1 class="titulo">GESTIÓN DEL DESEMPEÑO</h1>
+  <p class="breadcrumb">Inicio / Gestión del Desempeño / Análisis Organizacional</p>
+  <h2 class="subtitulo">DASHBOARD / REPORTES</h2>
+  <h3 class="resultado-sub">RESULTADOS DE:</h3>
+
+  <div class="contenedor-tarjetas">
+
+    <!-- Impulsando el Crecimiento -->
+    <a href="{{ url_for('reportes_bp.crecimiento') }}" class="tarjeta-link">
+      <div class="tarjeta">
+        <h3>Impulsando El Crecimiento</h3>
+        <p>Lorem Ipsum Dolor Se Sienta Amet, Consectetur Adipisicing Elit...</p>
+        <img src="{{ url_for('static', filename='img/crecimiento_icon.png') }}" alt="Icono Crecimiento">
+      </div>
+    </a>
+
+    <!-- Análisis Organizacional -->
+    <a href="{{ url_for('reportes_bp.analisis_organizacional') }}" class="tarjeta-link">
+      <div class="tarjeta">
+        <h3>Análisis Organizacional</h3>
+        <p>Lorem Ipsum Dolor Se Sienta Amet, Consectetur Adipisicing Elit...</p>
+        <img src="{{ url_for('static', filename='img/analisis_icon.png') }}" alt="Icono Análisis">
+      </div>
+    </a>
+
+  </div>
+
+  <div class="volver">
+    <a href="{{ url_for('desempeno_bp.otras_contribuciones') }}" class="btn-volver">VOLVER</a>
+  </div>
+
+</div>
+{% endblock %}

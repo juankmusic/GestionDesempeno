@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Concertación de Propósitos Estratégicos{% endblock %}
+
+{% block content %}
+<div class="container text-center py-4">
+    <h2 class="fw-bold">CONCERTACIÓN DE PROPÓSITOS ESTRATÉGICOS</h2>
+    <div class="row justify-content-center mt-4">
+        {% for p in proyectos %}
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm p-3">
+                    <h5 class="fw-bold">{{ p.nombre }}</h5>
+                    <a href="{{ url_for('desempeno_bp.detalle_proyecto_estrategico', proyecto_id=p.id) }}" class="btn btn-outline-primary mt-2">Más Info.</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('desempeno_bp.concentracion_propositos') }}" class="btn btn-dark mt-4">VOLVER</a>
+</div>
+{% endblock %}

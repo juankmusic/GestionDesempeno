@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Propósitos Mejora Procesos{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-auto">
+            <img src="{{ url_for('static', filename='img/avatar.png') }}" class="rounded-circle" width="80">
+            <p class="fw-bold text-center mt-2">MONO MONSTER</p>
+        </div>
+        <div class="col">
+            <h3 class="fw-bold text-center">CONCERTACIÓN DE MEJORA DE PROCESOS</h3>
+        </div>
+    </div>
+
+    <div class="card shadow-sm p-4 mb-4" style="border-radius: 12px;">
+        <p class="mb-0">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada rutrum diam, sed sollicitudin sed sed.
+        </p>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="{{ url_for('desempeno_bp.concentracion_propositos') }}" class="btn btn-dark px-5">VOLVER</a>
+    </div>
+</div>
+{% endblock %}

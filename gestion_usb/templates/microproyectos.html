@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Microproyectos Activos{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Microproyectos Activos</h2>
+
+{% for micro in microproyectos %}
+    <div class="card mb-3 p-3">
+        <h5>{{ micro.nombre }}</h5>
+        <p><strong>Proyecto:</strong> {{ micro.proyecto.nombre if micro.proyecto else 'No asignado' }}</p>
+        <p><strong>Líder:</strong> {{ micro.lider.nombre if micro.lider else 'Sin líder' }}</p>
+    </div>
+{% endfor %}
+
+{% endblock %}

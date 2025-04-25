@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Análisis Organizacional{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">📊 Análisis Organizacional</h2>
+    <p class="text-muted">Gráfico de evolución de respuestas por dimensión.</p>
+
+    <!-- Gráfico -->
+    <div class="mb-5">
+        {{ grafico|safe }}
+    </div>
+
+    <!-- Tabla de resumen -->
+    <div class="card shadow-sm p-4">
+        <h5 class="card-title">Resumen Promedios por Dimensión</h5>
+        <table class="table table-bordered table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Dimensión</th>
+                    <th>Fechas</th>
+                    <th>Promedios</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dimension, datos in resumen.items() %}
+                    <tr>
+                        <td><strong>{{ dimension }}</strong></td>
+                        <td>{{ datos.fechas|join(', ') }}</td>
+                        <td>{{ datos.valores|join(', ') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Botón volver -->
+    <div class="mt-4">
+        <a href="{{ url_for('reportes_bp.dashboard_reportes') }}" class="btn btn-secondary">⬅ Volver</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Impulsando el Crecimiento{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">📈 Impulsando el Crecimiento</h2>
+    <p class="text-muted">A continuación se presentan los resultados de los indicadores relacionados con el crecimiento institucional.</p>
+
+    <!-- Gráfico de líneas -->
+    <div class="mb-5">
+        {{ grafico|safe }}
+    </div>
+
+    <!-- Tabla de resumen -->
+    <div class="card shadow-sm p-4">
+        <h5 class="card-title">Resumen de Indicadores de Crecimiento</h5>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Nombre del Indicador</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for indicador in indicadores %}
+                    <tr>
+                        <td>{{ indicador.nombre }}</td>
+                        <td>{{ indicador.descripcion or 'Sin descripción' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Botón volver -->
+    <div class="mt-4">
+        <a href="{{ url_for('reportes_bp.dashboard_reportes') }}" class="btn btn-secondary">⬅ Volver</a>
+    </div>
+</div>
+{% endblock %}

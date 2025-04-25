@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Concertación de Propósitos{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Avatar + Título -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-3 text-center">
+            <img src="{{ url_for('static', filename='img/avatar.png') }}" alt="Avatar" class="rounded-circle mb-2" width="100">
+            <p class="fw-bold mb-0">MONO MONSTER</p>
+        </div>
+        <div class="col-md-9 text-center">
+            <h2 class="fw-bold mb-0">CONCERTACIÓN DE PROPÓSITOS</h2>
+        </div>
+    </div>
+
+    <!-- Tarjetas dinámicas -->
+    <div class="row g-4 justify-content-center">
+        {% for tarjeta in tarjetas %}
+        <div class="col-md-4">
+            <a href="{{ tarjeta.enlace }}" class="text-decoration-none">
+                <div class="card shadow-sm p-3 h-100 text-dark" style="border-radius: 12px; background-color: #f6f6f6;">
+                    <h6 class="text-uppercase fw-semibold mb-1" style="font-size: 13px;">{{ tarjeta.titulo }}</h6>
+                    <p class="text-muted small" style="font-size: 12px;">
+                        {{ tarjeta.descripcion }}
+                    </p>
+                    <div class="mt-auto" style="height: 5px; background-color: #ff8000; border-radius: 3px;"></div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Botón Volver -->
+    <div class="text-center mt-5">
+        <a href="{{ url_for('desempeno_bp.contribuciones_individuales') }}" class="btn btn-dark px-5">VOLVER</a>
+    </div>
+
+</div>
+{% endblock %}

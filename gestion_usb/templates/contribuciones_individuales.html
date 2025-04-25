@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Contribuciones Individuales{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold">Contribuciones Individuales</h2>
+<p class="text-muted">Accede a las categorías evaluativas del equipo</p>
+
+<!-- Filtro -->
+<div class="mb-4">
+    <label class="form-label fw-semibold">Búsqueda de colaborador por nombre</label>
+    <div class="input-group">
+        <input type="text" class="form-control" id="filtroNombre" placeholder="Ej: Ana Torres">
+        <button class="btn btn-primary" type="button" onclick="filtrarColaboradores()">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Lista de colaboradores -->
+<div class="row" id="listaColaboradores">
+    {% for usuario in usuarios %}
+    <div class="col-md-3 mb-3 colaborador" data-nombre="{{ usuario.nombre|lower }}">
+        <a href="{{ url_for('desempeno_bp.detalle_colaborador', usuario_id=usuario.id) }}" class="text-decoration-none text-dark">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='img/avatar.png') }}" class="rounded-circle mb-2" width="60">
+                    <h6 class="fw-bold">{{ usuario.nombre }}</h6>
+                    <p class="small text-muted">
+                        {{ usuario.cargo.nombre if usuario.cargo else 'Sin cargo' }}
+                    </p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+
+    <!-- Agregar miembro -->
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm text-center py-4" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalAgregarMiembro">
+            <h5 class="text-primary mb-0">+</h5>
+            <small class="text-muted">Agregar miembro</small>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAgregarMiembro" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="{{ url_for('usuarios_bp.crear_usuario') }}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar nuevo miembro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correo electrónico</label>
+                        <input type="email" name="correo" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" name="contrasena" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rol</label>
+                        <select name="id_rol" class="form-select" required>
+                            {% for rol in roles %}
+                            <option value="{{ rol.id }}">{{ rol.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cargo</label>
+                        <select name="id_cargo" class="form-select">
+                            <option value="">-- Opcional --</option>
+                            {% for cargo in cargos %}
+                            <option value="{{ cargo.id }}">{{ cargo.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Equipo</label>
+                        <select name="id_equipo" class="form-select">
+                            <option value="">-- Opcional --</option>
+                            {% for equipo in equipos %}
+                            <option value="{{ equipo.id }}">{{ equipo.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function filtrarColaboradores() {
+        const filtro = document.getElementById('filtroNombre').value.toLowerCase();
+        const tarjetas = document.querySelectorAll('.colaborador');
+
+        tarjetas.forEach(card => {
+            const nombre = card.getAttribute('data-nombre');
+            card.style.display = nombre.includes(filtro) ? '' : 'none';
+        });
+    }
+</script>
+{% endblock %}

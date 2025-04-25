@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Panel{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Estilos de fuentes e íconos -->
+    <link href="https://fonts.cdnfonts.com/css/nexa-bold" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Bootstrap y CSS personalizado -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="bg-light border-end p-3 sidebar" style="min-width: 220px; height: 100vh;">
+            <div class="text-center mb-4">
+                <img src="{{ url_for('static', filename='img/avatar.png') }}" class="rounded-circle" width="100">
+                <h5 class="mt-2">{{ usuario.nombre }}</h5>
+                <p class="text-muted small">Director de Programa</p>
+            </div>
+            
+            <nav class="navbar">
+                <ul class="navbar-nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link inicio {% if request.path == url_for('usuarios_bp.dashboard') %}fw-bold{% endif %}"
+                           href="{{ url_for('usuarios_bp.dashboard') }}">
+                            <img src="{{ url_for('static', filename='img/inicio.png')}}" class="icon"> INICIO
+                        </a>
+                    </li>
+            
+                    <li class="nav-item dropdown">
+                        <a class="nav-link gestion-desempeno {% if 'desempeno' in request.path %}fw-bold{% endif %}"
+                            href="{{ url_for('desempeno_bp.index') }}">
+                            <img src="{{ url_for('static', filename='img/BGDesempeño.png') }}" class="icon"> GESTIÓN DEL DESEMPEÑO
+                        </a>
+                        <button class="dropdown-toggle btn btn-secondary" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="desempenoDropdown">
+                            <a class="dropdown-item" href="{{ url_for('desempeno_bp.contribuciones_individuales') }}"
+                            >Contibuciones individuales</a>
+                            <a class="dropdown-item" href="#">Otras contibuciones</a>
+                        </ul>
+                    </li>
+            
+                    <li class="nav-item dropdown">
+                        <a class="nav-link gestion-desarrollo {% if 'desarrollo' in request.path %}fw-bold{% endif %}"
+                            href="{{ url_for('desarrollo_bp.index') }}">
+                            <img src="{{ url_for('static', filename='img/BGDesarrollo.png') }}" class="icon"> GESTIÓN DEL DESARROLLO
+                        </a>
+                        <button class="dropdown-toggle btn btn-secondary" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="desempenoDropdown">
+                            <a class="dropdown-item" href="{{ url_for('desarrollo_bp.cursos') }}">Cursos</a>
+                            <a class="dropdown-item" href="{{ url_for('desarrollo_bp.videos') }}">Videos</a>
+                            <a class="dropdown-item" href="{{ url_for('desarrollo_bp.podcasts') }}">Podcast</a>
+                        </ul>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link equipo{% if 'usuarios' in request.path %}fw-bold{% endif %}"
+                           href="{{ url_for('usuarios_bp.lista_usuarios') }}">
+                            <img src="{{ url_for('static', filename='img/equipo.png')}}" class="icon"> EQUIPO
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link configuracion {% if 'configuracion' in request.path %}fw-bold{% endif %}"
+                           href="{{ url_for('usuarios_bp.configuracion') }}">
+                            <img src="{{ url_for('static', filename='img/configuracion.png')}}" class="icon"> CONFIGURACIÓN
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('usuarios_bp.logout') }}">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </nav>            
+        </div>
+
+        <!-- Main content -->
+        <div class="content p-4 flex-grow-1">
+            {% block content %}
+            <!-- Aquí se inyectará el contenido de la página -->
+            {% endblock %}
+        </div>
+    </div>
+    
+    <!-- Scripts comunes -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+        integrity="sha384-dq3gms3U00/GRxUOAvFXTvDN+qkdOqcqTT8HqG+oqm4xU49TclE3i9ezZs4CwBf3"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <canvas id="myCanvas" width="1300" height="1200";></canvas>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+    
+        function resizeCanvas() {
+        // Ajustar el tamaño del canvas al tamaño de la ventana
+        canvas.width = window.innerWidth * 0.9;  // 90% del ancho de la ventana
+        canvas.height = window.innerHeight * 0.9; // 90% del alto de la ventana
+        redrawCanvas(); // Redibujar el contenido después del cambio
+    }
+    
+    function redrawCanvas() {
+        // Limpiar el canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Escalar las líneas según el tamaño del canvas
+        let scaleX = canvas.width / 1300; // 1300 es el ancho original
+        let scaleY = canvas.height / 1200; // 1200 es el alto original
+
+        function drawLine(x1, y1, width, angle) {
+            const x2 = x1 + width * Math.cos(angle * Math.PI / 180);
+            const y2 = y1 + width * Math.sin(angle * Math.PI / 180);
+
+            const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+            gradient.addColorStop(0, 'rgba(242, 110, 46, 0.8)');
+            gradient.addColorStop(1, 'rgba(241, 76, 108, 0.8)');
+
+            ctx.lineWidth = 5 * scaleX; // Ajustar el grosor de la línea
+            ctx.strokeStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(x1 * scaleX, y1 * scaleY);
+            ctx.lineTo(x2 * scaleX, y2 * scaleY);
+            ctx.stroke();
+        }
+    }
+        
+        // Función para dibujar una línea con gradiente
+        function drawLine(x1, y1, width, angle) {
+            const x2 = x1 + width * Math.cos(angle * Math.PI / 180);
+            const y2 = y1 + width * Math.sin(angle * Math.PI / 180);
+
+            const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+            gradient.addColorStop(0, 'rgba(242, 110, 46, 0.8)');
+            gradient.addColorStop(1, 'rgba(242, 110, 46, 0.8)');
+
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+        // Líneas según el CSS proporcionado
+
+        // line-1 IMPORTANTE
+        drawLine(905, 120, 400, 120.90); //Linea conectora entre G. desempeño y equipos
+        // line-1 IMPORTANTE
+
+        // line-2 IMPORTANTE
+        drawLine(1100, 50, 215, 160.256); //Linea que se va hacia la esquina superior derecha
+        // line-2 IMPORTANTE
+
+        // line-3 SE QUEDA ASI COMO EST7A
+        drawLine(1100, 52, 400, -103.208); //Linea que se junta hacia la esquina superior y va a el techo
+        // line-3 SE QUEDA ASI COMO ESTA
+
+
+        // line-4 SE QUEDA ASI COMO ESTA 
+        drawLine(385, 159, 484.54, 146.703);// Al lado de G. desempeño hacia la izquierda
+        // line-4 SE QUEDA ASI COMO ESTA
+
+        // line-5 SE QUEDA ASI COMO ESTA
+        drawLine(385, 159, 476.89, -132.961); // Al lado de G. desempeño hacia el techo
+        // line-5 SE QUEDA ASI COMO ESTA
+
+        // line-6 SE QUEDA ASI COMO ESTA
+        drawLine(354, 487, 384.68, -166.47); // Junto de equipo hacia la izquierda
+        // line-6 SE QUEDA ASI COMO ESTA
+
+        // line-7 SE TIENEN QUE CAMBIAR DETALLES
+        drawLine(1309, 75, 210, -172.919); //Esquina superior hacia la derecha
+        // line-7 SE TIENEN QUE CAMBIAR DETALLES
+
+        // line-8 IMPORTANTE
+        drawLine(850, 375, 175, 150); //Linea conectora entre G. desarrollo y equipos
+        // line-8 IMPORTANTE
+
+        // line-9 IMPORTANTE
+        drawLine(900, 122, 520, 176); //Debajo de Gestión de desempeño
+        // line-9 IMPORTANTE
+
+        // line-10 IMPORTANTE
+        drawLine(1500, 375, 650, 180); //Debajo de Gestión de desarrollo
+        // line-10 SE QUEDA ASI COMO ESTA
+
+        // line-11 IMPORTANTE
+        drawLine(700, 462, 350, 176.005); //Debajo de equipo
+        // line-11 IMPORTANTE
+
+        // line-12 IMPORTANTE
+        drawLine(850, 650, 240, -125.458); //Equipos hacia el fondo
+        // line-12 IMPORTANTE
+
+        // line-13 IMPORTANTE
+        drawLine(960, 650, 290, -113.460); //Desarrollo hacia el fondo
+        // line-13 IMPORTANTE
+        document.fonts.load("bold 35px Nexa").then(() => {
+            console.log("Fuente Nexa cargada");
+            dibujarTexto();
+        });
+        document.fonts.load("15px Nexa").then(() => {
+            console.log("Fuente Nexa cargada");
+            dibujarTexto2();
+        });
+        // Agregar texto en el canvas
+        function dibujarTexto() {
+        ctx.fillStyle = 'black'; // Color del texto
+        ctx.font = 'bold 35px Nexa'; // Tamaño y tipo de fuente
+        
+        
+
+        // Ejemplo de texto en diferentes posiciones
+        ctx.fillText('GESTIÓN DEL', 380, 88); // Primera línea diferencia de 50
+        ctx.fillText('DESEMPEÑO', 380, 125); // Segunda línea
+        ctx.fillText('GESTIÓN DEL', 900, 313);
+        ctx.fillText('DESARROLLO', 900, 350);
+        ctx.fillText('EQUIPOS', 380, 460);
+        }
+
+        
+        // DESEMPEÑO
+        function dibujarTexto2() {
+        ctx.fillStyle = 'black'; // Color del texto
+        ctx.font = '15px Nexa'; // Cambia el tamaño y el tipo de fuente
+        ctx.fillText('Impulsamos la excelencia educativa a través de la', 380, 178);
+        ctx.fillText('evaluación y mejora continua de nuestro equipo.', 380, 200);
+        ctx.fillText('Fomentamos el crecimiento profesional y alineamos', 380, 222);
+        ctx.fillText('esfuerzos para alcanzar los más altos estándares en el', 380, 244);
+        ctx.fillText('proceso educativo.', 380, 266);
+        }
+
+        // EQUIPO
+        ctx.font = '15px Nexa'; // Cambia el tamaño y el tipo de fuente
+        ctx.fillText('Nuestro éxito se construye con la colaboración', 380, 520);
+        ctx.fillText('de equipos comprometidos donde', 380, 544);
+        ctx.fillText('cada miembro aporta talento y visión', 380, 566);
+        ctx.fillText('para alcanzar metas comunes.', 380, 588);
+
+
+        // DESARROLLO
+        ctx.font = '15px Nexa'; // Cambia el tamaño y el tipo de fuente
+        ctx.fillText('Potenciamos el crecimiento institucional mediante', 900, 400);
+        ctx.fillText('estrategias innovadoras que impulsan el ', 900, 420);
+        ctx.fillText('talento y garantizan un progreso sostenible.', 900, 440);
+        //ctx.fillText('Lorem ipsum dolor se sienta amet', 900, 460);
+            
+        //elipses
+
+        // Función para dibujar elipses agrupadas
+        function drawEllipses(x, y) {
+            // Elipse base (ellipse-285)
+            ctx.beginPath();
+            ctx.arc(x, y, 50, 0, 2 * Math.PI);
+            ctx.fillStyle = '#d9d9d9';
+            ctx.fill();
+
+            // Elipse con sombra (ellipse-271)
+            ctx.beginPath();
+            ctx.arc(x, y, 36, 0, 2 * Math.PI);
+            ctx.fillStyle = '#eeecec';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.25)';
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+            ctx.fill();
+
+            // Elipse con sombra interior (ellipse-272)
+            ctx.beginPath();
+            ctx.arc(x, y, 33, 0, 2 * Math.PI);
+            ctx.fillStyle = '#eeecec';
+            ctx.shadowColor = 'rgba(255, 251, 251, 1)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = -4;
+            ctx.shadowOffsetY = -4;
+            ctx.fill();
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.25)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 4;
+            ctx.fill();
+
+            // Elipse con sombra más pronunciada (ellipse-273)
+            ctx.beginPath();
+            ctx.arc(x, y, 33, 0, 2 * Math.PI);
+            ctx.fillStyle = '#eeecec';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.25)';
+            ctx.shadowBlur = 43;
+            ctx.shadowOffsetX = -4;
+            ctx.shadowOffsetY = -4;
+            ctx.fill();
+        }
+
+        // Llamar a la función para dibujar elipses en la posición deseada
+        drawEllipses(700, 462); //Equipo
+        drawEllipses(850, 375); //Desarrollo
+        drawEllipses(901, 120); //Desempeño
+
+    // Agregar la imagen en el centro
+    const img = new Image();
+    const butterflyImg = new Image();
+    img.src = '/static/img/siguiente.png';
+    butterflyImg.src = '/static/img/mariposa0.png';
+    let imagesLoaded = 0;
+    img.onload = function () {
+        ctx.drawImage(img, 669, 430.3, 64, 64); //Equipo
+        ctx.drawImage(img, 819, 343.3, 64, 64); //Desarrollo
+        ctx.drawImage(img, 870, 88.3, 64, 64); //Desempeño
+    };
+    butterflyImg.onload = function () {
+        ctx.save();
+        ctx.globalAlpha = 0.15;
+        ctx.translate(300 + 35, 299.3 +32, 70, 64);
+        ctx.rotate(-40 * Math.PI / 180);
+        ctx.scale(4.2, 5);
+        ctx.drawImage(butterflyImg, -35, -32, 70, 64);
+        ctx.restore();
+
+        ctx.save();
+        ctx.globalAlpha = 0.15;
+        ctx.translate(1020 + 35, 450.3 +32, 170, 190);
+        ctx.rotate(50 * Math.PI / 180);
+        ctx.scale(6, 7);
+        ctx.drawImage(butterflyImg, -35, -32, 70, 64);
+        ctx.restore();
+    };
+
+        
+
+        // Coordenadas y radios de las elipses para la detección de clics
+        const ellipses = [
+            { x: 750, y: 500, radius: 50, link: "{{ url_for('usuarios_bp.lista_usuarios') }}" },
+            { x: 900, y: 420, radius: 50, link: "{{ url_for('desarrollo_bp.index') }}" },
+            { x: 970, y: 170, radius: 50, link: "{{ url_for('desempeno_bp.index') }}" }
+        ];
+        // Evento para cambiar el cursor cuando el mouse pase sobre una elipse
+        canvas.addEventListener('mousemove', function (event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            let hovering = false;
+            for (let ellipse of ellipses) {
+                if (isInsideEllipse(x, y, ellipse.x, ellipse.y, ellipse.radius)) {
+                    hovering = true;
+                    break;
+                }
+            }
+
+            if (hovering) {
+                canvas.style.cursor = "pointer"; // Cambia el cursor a manito
+            } else {
+                canvas.style.cursor = "default"; // Cursor normal
+            }
+        });
+
+        // Detectar clics en el canvas
+        canvas.addEventListener('click', function (event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // Verificar si el clic está dentro de las elipses
+            for (let ellipse of ellipses) {
+                if (isInsideEllipse(x, y, ellipse.x, ellipse.y, ellipse.radius)) {
+                    window.location.href = ellipse.link; // Redirige a la página deseada
+                    return;
+                }
+            }
+
+            // Verificar si el clic está dentro de las imágenes
+            if (isInsideImage(x, y, 669, 430.3, 64, 64)) {
+                window.location.href = '/equipo'; // Redirige a la página deseada
+            } else if (isInsideImage(x, y, 819, 343.3, 64, 64)) {
+                window.location.href = '/gestiondeldesarrollo'; // Redirige a la página deseada
+            } else if (isInsideImage(x, y, 870, 88.3, 64, 64)) {
+                window.location.href = '/gestiondeldesempeno'; // Redirige a la página deseada
+            }
+            
+            
+        });
+
+        // Función para verificar si el clic está dentro de una elipse
+        function isInsideEllipse(x, y, cx, cy, r) {
+            const dx = x - cx;
+            const dy = y - cy;
+            return (dx * dx + dy * dy) <= (r * r);
+        }
+
+        // Función para verificar si el clic está dentro de una imagen
+        function isInsideImage(x, y, imgX, imgY, imgWidth, imgHeight) {
+            return x >= imgX && x <= imgX + imgWidth && y >= imgY && y <= imgY + imgHeight;
+            
+    }
+
+    </script>
+    
+</body>
+
+</html>
+

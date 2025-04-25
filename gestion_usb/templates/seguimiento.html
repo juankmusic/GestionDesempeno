@@ -1,0 +1,17 @@
+<h2>Seguimiento de: {{ proyecto.nombre }}</h2>
+
+<ul>
+    {% for s in seguimientos %}
+        <li><strong>{{ s.fecha }}</strong>: {{ s.descripcion }}</li>
+    {% else %}
+        <li>No hay seguimiento registrado.</li>
+    {% endfor %}
+</ul>
+
+<form method="post">
+    <label>Fecha:</label>
+    <input type="date" name="fecha" required><br>
+    <label>Descripción:</label>
+    <textarea name="descripcion" required></textarea><br>
+    <button type="submit">Agregar Seguimiento</button>
+</form>

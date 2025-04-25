@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block body_class %}gestion-scroll-off{% endblock %}
+
+{% block title %}Desarrollo{% endblock %}
+
+{% block content %}
+<!-- Bloque superior solo con título y divider -->
+
+<div class="desarrollo">
+    <h2 class="main-title">Gestión del Desarrollo</h2>
+    <hr class="divider0">
+</div>  
+
+<!-- Bloque inferior con todo el contenido -->
+<div class="desarrollo">
+    <div class="bienvenido">
+        <h2 class="main-subtitle">BIENVENIDO COLABORADOR</h2>
+        <p class="texto2">
+            Aquí encontrarás todas las herramientas y recursos necesarios para tu crecimiento profesional.<br>
+            Nuestro objetivo es impulsar tu desarrollo, brindándote acceso a contenido valioso que potenciará <br>
+            tus habilidades y te mantendrá al tanto de las mejores prácticas.
+        </p>
+    </div>
+
+    <div class="rectangles-container">
+        <!-- Contenido con rectángulos -->
+        <a href="{{ url_for('desarrollo_bp.cursos') }}" >
+            <div class="rectangle-2100">
+                <span class="texto3">CURSOS</span>
+                <p>Capacítate con nuestros cursos especializados que cubren las últimas tendencias y habilidades necesarias para tu desarrollo profesional.</p>
+                <img src="{{ url_for('static', filename='img/curso0.jpeg') }}" class="curso" />
+            </div>
+        </a>
+
+        <a href="{{ url_for('desarrollo_bp.videos') }}" >
+            <div class="rectangle-2101">
+                <span class="texto3">VIDEOS</span>
+                <p>Aprende de manera dinámica a través de nuestros videos instructivos, diseñados para mejorar tu experiencia de aprendizaje.</p>
+                <img src="{{ url_for('static', filename='img/video0.png') }}" class="video" />
+            </div>
+        </a>
+
+        <a href="{{ url_for('desarrollo_bp.podcasts') }}" >
+            <div class="rectangle-2102">
+                <span class="texto3">PODCAST</span>
+                <p>Escucha a expertos de la industria y mantente actualizado con los últimos debates y novedades en el mundo profesional.</p>
+                <img src="{{ url_for('static', filename='img/casete0.png') }}" class="casete" />
+            </div>
+        </a>
+        
+
+    </div>
+     <div class="usuario-container">
+        <img src="{{ url_for('static', filename='img/cohete0.png')}}" class="usuarios"/>
+        </div>
+        <img src="{{ url_for('static', filename='img/mariposa0.png')}}" class="mariposa"/>
+     </div>
+</div>
+
+{% endblock %}

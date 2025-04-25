@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="contenedor-analisis">
+  <div class="cabecera">
+    <h1>GESTIÓN DEL DESEMPEÑO</h1>
+    <p>Inicio / Gestión del Desempeño / Análisis Organizacional</p>
+    <h2>ANÁLISIS ORGANIZACIONAL</h2>
+  </div>
+
+  <div class="contenido-principal">
+    <div class="mensaje">
+      <h3>SELECCIONE UNO DE LOS ÍTEMS PARA COMENZAR LA EVALUACIÓN</h3>
+    </div>
+
+    <div class="progreso">
+      <p>Tu Progreso</p>
+      <div class="barra">
+        <div class="relleno" style="width: 25%;"></div>
+        <span class="porcentaje">25%</span>
+      </div>
+    </div>
+
+    <div class="items-evaluacion">
+      <button class="item activo">Estrategia</button>
+      <button class="item">Estructura</button>
+      <button class="item">Liderazgo</button>
+      <button class="item">Relaciones Interpersonales</button>
+      <button class="item">Condiciones Objetivas</button>
+      <button class="item">Recompensa</button>
+      <button class="item">Comprensiones De La Motivación</button>
+      <button class="item">Desarrollo Del Talento Humano</button>
+    </div>
+
+    <div class="volver">
+      <a href="{{ url_for('desempeno_bp.otras_contribuciones') }}" class="btn-volver">VOLVER</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
