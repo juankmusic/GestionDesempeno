@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block title %}Detalle del Colaborador{% endblock %}
 
 {% block content %}
@@ -9,12 +10,34 @@
             <div class="card shadow-sm p-4 text-center">
                 <img src="{{ url_for('static', filename='img/avatar.png') }}" class="rounded-circle mb-3" width="100" alt="Avatar">
                 <h5 class="fw-bold">{{ colaborador.nombre }}</h5>
-                <p class="text-muted small mb-1">{{ colaborador.cargo.nombre if colaborador.cargo else 'Sin cargo' }}</p>
-                <p class="text-muted small mb-1">{{ colaborador.rol.nombre if colaborador.rol else 'Sin rol' }}</p>
-                <p class="text-muted small mb-1">{{ colaborador.equipo.nombre if colaborador.equipo else 'Sin equipo' }}</p>
-                <p class="text-muted small"><i class="bi bi-envelope"></i> {{ colaborador.correo }}</p>
+                
+                <!-- Mostrar el cargo con el título "Cargo:" -->
+                <p class="text-muted small mb-1">
+                    <strong>Cargo:</strong> {{ colaborador.cargo.nombre if colaborador.cargo else 'Sin cargo' }}
+                </p>
+
+                <!-- Mostrar el rol con el título "Rol:" -->
+                <p class="text-muted small mb-1">
+                    <strong>Rol:</strong> {{ colaborador.rol.nombre if colaborador.rol else 'Sin rol' }}
+                </p>
+
+                <!-- Mostrar el equipo con el título "Equipo:" -->
+                <p class="text-muted small mb-1">
+                    <strong>Equipo:</strong> {{ colaborador.equipo.nombre if colaborador.equipo else 'Sin equipo' }}
+                </p>
+
+                <!-- Mostrar el nivel de contribución con el título "Nivel de Contribución:" -->
+                <p class="text-muted small mb-1">
+                    <strong>Nivel de Contribución:</strong> {{ colaborador.nivel_contribucion.nivel_de_contribucion if colaborador.nivel_contribucion else 'Sin Nivel de Contribución' }}
+                </p>
+
+                <!-- Mostrar el correo con el título "Correo:" -->
+                <p class="text-muted small">
+                    <strong>Correo:</strong> <i class="bi bi-envelope"></i> {{ colaborador.correo }}
+                </p>
             </div>
         </div>
+
 
         <!-- Panel derecho: Categorías evaluativas -->
         <div class="col-md-8">
@@ -23,13 +46,15 @@
                 {% for cat in categorias %}
                 <div class="col-md-6">
                     {% if cat.id == 3 %}
+                        <!-- Redirige a concertación de propósitos -->
                         <a href="{{ url_for('desempeno_bp.concentracion_propositos') }}"
                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center shadow-sm p-3 text-decoration-none">
                             {{ cat.nombre }}
                             <img src="{{ url_for('static', filename='img/' ~ cat.icono) }}" height="30">
                         </a>
                     {% else %}
-                        <a href="{{ url_for('desempeno_bp.formulario_categoria', usuario_id=colaborador.id, categoria_id=cat.id) }}"
+                        <!-- Redirige a formulario por origen (ej. dimension_pregunta) -->
+                        <a href="{{ url_for('desempeno_bp.formulario_por_origen', usuario_id=colaborador.id, origen='dimension_pregunta') }}"
                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center shadow-sm p-3 text-decoration-none">
                             {{ cat.nombre }}
                             <img src="{{ url_for('static', filename='img/' ~ cat.icono) }}" height="30">

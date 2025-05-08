@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Preguntas para {{ usuario.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="fw-bold mb-4">
+        Preguntas asignadas según nivel: {{ usuario.nivel_contribucion.nivel_de_contribucion }}
+    </h2>
+
+    {% if preguntas %}
+    <form method="POST">
+        {% for pregunta in preguntas %}
+            <div class="mb-4">
+                <label class="form-label fw-semibold">{{ pregunta.texto }}</label>
+
+                {% if pregunta.respuestas %}
+                    <select name="respuesta_{{ pregunta.id }}" class="form-select" required>
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        {% for respuesta in pregunta.respuestas %}
+                            <option value="{{ respuesta.id }}">
+                                {{ respuesta.texto }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <div class="text-danger mt-2">
+                        ⚠ Esta pregunta aún no tiene respuestas asociadas.
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary px-4">Guardar Respuestas</button>
+            <a href="{{ url_for('desempeno_bp.index') }}" class="btn btn-outline-secondary ms-2">Cancelar</a>
+        </div>
+    </form>
+    {% else %}
+        <div class="alert alert-warning">
+            No hay preguntas disponibles para este nivel de contribución.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

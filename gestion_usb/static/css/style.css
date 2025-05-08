@@ -1236,3 +1236,134 @@ html.gestion-scroll-off::-webkit-scrollbar {
   border-radius: 10px;
   text-decoration: none;
 }
+
+/* === EQUIPO=== */
+
+.contribucion .input-group {
+  width: 40%;
+  border-radius: 50% ;
+}
+
+.contribucion .mb-4{
+  margin-bottom: 1rem;
+  font-size: 30px;
+  font-style: italic;
+}
+.colaborador {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.colaborador:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.colaborador .card {
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+.contribucion .form-control {
+  border-radius: 10px;  /* Borde redondeado para todos los inputs */
+  border: 1px solid #ffffff;  /* Borde azul */
+  padding: 8px 12px;  /* Relleno interno */
+  font-size: 1rem;  /* Tamaño de la fuente */
+  background-color: #b3b9be;  /* Fondo suave */
+  height: 40px;  /* La altura se ajusta automáticamente */
+  width: 200px;  /* Cambia esto al tamaño que desees */
+  max-width: 100%;
+}
+
+.contribucion .form-control:focus {
+  border-color: #0056b3;  /* Aplica un borde más oscuro cuando el input está enfocado */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) ;  /* Añade un halo de enfoque */
+  background-color: #ffffff;
+}
+
+.contribucion hr.divider0 {
+  width: 80%;
+  height: 5px;
+  background-color: rgb(0, 0, 0);
+  border: none;
+  position: fixed;
+  top: 55px;
+  left: 68%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+.contribucion .mariposa {
+  width: 445px;
+  height: 445px;
+  position: absolute;
+  left: 1000px;
+  top: -170px;
+  transform: rotate(-45deg) scale(1, 1);
+  object-fit: cover;
+  opacity: 30%;
+}
+
+@media screen and (max-width: 1920px) {
+  .contribucion hr.divider0 {
+    width: 80%;
+    top: 50px;
+    left: 60%;
+    transform: translateX(-50%);
+  }
+  .contribucion .mariposa {
+    width: 445px;
+    height: 600px;
+    position: absolute;
+    left:1450px;
+    top: -250px;
+    transform: rotate(-45deg) scale(1, 1);
+    object-fit: cover;
+    opacity: 30%;
+  }
+  .usuario-container {
+    left: 1700px;
+    top: 35px;
+  }
+  .usuarios {
+    width: 100%;  /* Hace que la imagen sea un poco más grande para cubrir el círculo */
+    height: 80%;
+    object-fit: cover;
+  }
+}
+
+@media screen and (max-width: 1366px) {
+  .contribucion hr.divider0 {
+    width: 110%;
+    height: 5px; /* Aumenté el grosor a 10px */
+    border: none;
+    position: relative;
+    top: 0px;
+    left: 55%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+
+  .contribucion .mariposa {
+    width: 445px;
+    height: 445px;
+    position: absolute;
+    left: 1000px;
+    top: -170px;
+    transform: rotate(-45deg) scale(1, 1);
+    object-fit: cover;
+    opacity: 30%;
+  }
+
+  .usuario-container {
+    left: 1150px; /* Ajusté la posición para que no se salga de la pantalla */
+    top: 25px;
+  }
+
+  .usuarios {
+    width: 80%; /* Hace que la imagen sea un poco más grande para cubrir el círculo */
+    height: 80%;
+    object-fit: cover;
+  }
+  .contribucion .input-group {
+  width: 40%;
+  border-radius: 50% ;
+}
+}

@@ -1,4 +1,3 @@
-
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -35,6 +34,10 @@ class Usuario(db.Model):
     id_rol = db.Column(db.Integer, db.ForeignKey('rol.id'), nullable=False)
     id_cargo = db.Column(db.Integer, db.ForeignKey('cargo.id'), nullable=True)
     id_equipo = db.Column(db.Integer, db.ForeignKey('equipo.id'), nullable=True)
+    nivel_contribucion_id = db.Column(db.Integer, db.ForeignKey('nivel_contribucion.id_nivel'), nullable=True)
+
+    nivel_contribucion = db.relationship('NivelContribucion', back_populates='usuarios', lazy=True)
+
 
 
 # Tabla: apartado
@@ -125,9 +128,14 @@ class Pregunta(db.Model):
     __tablename__ = 'pregunta'
     id = db.Column(db.Integer, primary_key=True)
     texto = db.Column(db.String(255), nullable=False)
+    origen = db.Column(db.String, nullable=True)
     dimensiones = db.relationship('DimensionPregunta', backref='pregunta', lazy=True)
     respuestas = db.relationship('Respuesta', backref='pregunta', lazy=True)
-    
+    nivel_contribucion_id = db.Column(db.Integer, db.ForeignKey('nivel_contribucion.id_nivel'), nullable=True)
+
+    nivel_contribucion = db.relationship('NivelContribucion', back_populates='preguntas', lazy=True)
+
+
 
 # Tabla intermedia dimension_pregunta
 class DimensionPregunta(db.Model):
@@ -389,4 +397,15 @@ class RespuestaDimension(db.Model):
     dimension = db.relationship("Dimension", backref="respuestas_dimension", foreign_keys=[id_dimension])
     pregunta = db.relationship("Pregunta", backref="respuestas_dimension", foreign_keys=[id_pregunta])
     respuesta = db.relationship("Respuesta", backref="respuestas_dimension")
+
+class NivelContribucion(db.Model):
+    __tablename__ = 'nivel_contribucion'
+
+    id_nivel = db.Column(db.Integer, primary_key=True)
+    tipo_nivel = db.Column(db.Integer, nullable=False)
+    nivel_de_contribucion = db.Column(db.String(200), nullable=False)
+
+    usuarios = db.relationship('Usuario', back_populates='nivel_contribucion', lazy=True)
+    preguntas = db.relationship('Pregunta', back_populates='nivel_contribucion', lazy=True)
+
 

@@ -3,15 +3,21 @@
 {% block title %}Contribuciones Individuales{% endblock %}
 
 {% block content %}
+<div class="contribucion">
+
+
 <h2 class="fw-bold">Contribuciones Individuales</h2>
+<hr class="divider0">
 <p class="text-muted">Accede a las categorías evaluativas del equipo</p>
 
 <!-- Filtro -->
+
 <div class="mb-4">
     <label class="form-label fw-semibold">Búsqueda de colaborador por nombre</label>
     <div class="input-group">
         <input type="text" class="form-control" id="filtroNombre" placeholder="Ej: Ana Torres">
         <button class="btn btn-primary" type="button" onclick="filtrarColaboradores()">
+            Buscar 
             <i class="bi bi-search"></i>
         </button>
     </div>
@@ -100,6 +106,12 @@
             </div>
         </form>
     </div>
+
+</div>
+<div class="usuario-container">
+    <img src="{{ url_for('static', filename='img/icon-user-friends-icon0.jpg')}}" class="usuarios"/>
+    </div>
+    <img src="{{ url_for('static', filename='img/mariposa0.png')}}" class="mariposa"/>
 </div>
 
 <script>

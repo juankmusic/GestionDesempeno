@@ -11,7 +11,7 @@ load_dotenv()
 app = Flask(__name__, template_folder='gestion_usb/templates', static_folder='gestion_usb/static')
 app.secret_key = '123456789'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ainoaboleavilla@localhost:5432/backupBDGD'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:pgadmin4@localhost:5432/bdgestionnuevo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:pgadmin4@localhost:5432/bdgestionfinal'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # ✅ Solo inicializas la instancia ya importada

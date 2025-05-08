@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from gestion_usb.models import (
     db, Usuario, MicroProyecto, Proyecto, Dimension, DimensionPregunta,
-    Respuesta, DimensionRespuestaGuardada, Rol, Cargo, Equipo, Categoria
+    Respuesta, DimensionRespuestaGuardada, Rol, Cargo, Equipo, NivelContribucion, Categoria, RespuestaDimension, Pregunta
 )
 
 
@@ -74,19 +74,44 @@ def dashboard_desempeno():
 def contribuciones_individuales():
     if 'usuario_id' not in session:
         return redirect(url_for('usuarios_bp.login'))
-    usuarios = Usuario.query.all()
+
+    usuario = Usuario.query.get(session['usuario_id'])
+
+    # Lógica para filtrar los usuarios según su rol
+    if usuario.rol.nombre == 'Administrador':
+        usuarios = Usuario.query.join(Equipo).filter(Equipo.id == usuario.id_equipo).all()  # Los administradores ven todos los usuarios de su equipo
+    
+    elif usuario.rol.nombre == 'Docente':
+        usuarios = Usuario.query.join(Equipo).filter(Equipo.id == usuario.id_equipo).all()  # Docentes ven a los estudiantes de su equipo
+    
+    elif usuario.rol.nombre == 'Líder':
+        usuarios = Usuario.query.join(Equipo).filter(Equipo.id == usuario.id_equipo).all()  # Líderes ven a los miembros de su equipo
+    
+    elif usuario.rol.nombre == 'Estudiante':
+        usuarios = Usuario.query.filter(Usuario.id_equipo == usuario.id_equipo).all()  # Estudiantes ven solo a los miembros de su equipo
+    
+    elif usuario.rol.nombre == 'Colaborador':
+        usuarios = Usuario.query.join(Equipo).filter(Equipo.id == usuario.id_equipo).all()  # Colaboradores también ven a su equipo
+
+    else:
+        usuarios = []  # Si el rol no es reconocido, no muestra usuarios
+
+    # Obtener roles, cargos, equipos y niveles de contribución para el formulario
     roles = Rol.query.all()
     cargos = Cargo.query.all()
     equipos = Equipo.query.all()
-    usuario = Usuario.query.get(session['usuario_id'])
+    niveles_contribucion = NivelContribucion.query.all()  # Traemos los niveles de contribución
+
     return render_template(
         'contribuciones_individuales.html',
         usuario=usuario,
         usuarios=usuarios,
         roles=roles,
         cargos=cargos,
-        equipos=equipos
+        equipos=equipos,
+        niveles_contribucion=niveles_contribucion  # Pasamos los niveles de contribución a la plantilla
     )
+
 
 @desempeno_bp.route('/contribuciones/<int:usuario_id>')
 def detalle_colaborador(usuario_id):
@@ -190,6 +215,64 @@ def formulario_categoria(usuario_id, categoria_id):
         preguntas=preguntas,
         respuestas=respuestas
     )
+@desempeno_bp.route('/colaborador/<int:usuario_id>/origen/<string:origen>', methods=['GET', 'POST'])
+def formulario_por_origen(usuario_id, origen):
+    print(f"📢 Entrando a formulario_por_origen con usuario_id={usuario_id}, origen={origen}")
+
+    # Validar origen existente en la tabla pregunta
+    origenes_validos = db.session.query(Pregunta.origen).distinct().all()
+    origenes_validos = [o[0] for o in origenes_validos]
+
+    if origen not in origenes_validos:
+        flash(f"Origen '{origen}' no válido o no registrado en la base de datos.", "danger")
+        return redirect(url_for('desempeno_bp.contribuciones_individuales'))
+
+    # Obtener usuario
+    usuario = Usuario.query.get_or_404(usuario_id)
+
+    # Obtener preguntas del origen solicitado
+    preguntas_raw = Pregunta.query.filter_by(origen=origen).all()
+
+    # Asociar respuestas a cada pregunta
+    preguntas = []
+    for pregunta in preguntas_raw:
+        pregunta.respuestas = Respuesta.query.filter_by(pregunta_id=pregunta.id).all()
+        preguntas.append(pregunta)
+
+    # Procesar formulario
+    if request.method == 'POST':
+        for pregunta in preguntas:
+            respuesta_id = request.form.get(f'respuesta_{pregunta.id}')
+            if respuesta_id:
+                nueva_respuesta = DimensionRespuestaGuardada(
+                    id_usuario=usuario_id,
+                    id_pregunta=pregunta.id,
+                    id_respuesta=int(respuesta_id),
+                    id_dimension=None
+                )
+                db.session.add(nueva_respuesta)
+
+        db.session.commit()
+        flash('Respuestas guardadas correctamente', 'success')
+        return redirect(url_for('desempeno_bp.contribuciones_individuales'))
+
+    return render_template(
+        'formulario_categoria.html',
+        usuario=usuario,
+        origen=origen,
+        preguntas=preguntas
+    )
+
+
+@desempeno_bp.route('/colaborador/<int:usuario_id>', methods=['GET'])
+def formulario_dimension_directo(usuario_id):
+    return redirect(url_for(
+        'desempeno_bp.formulario_por_origen',
+        usuario_id=usuario_id,
+        origen='dimension_pregunta'
+    ))
+
+
 @desempeno_bp.route('/propositos/estrategico')
 def proposito_estrategico():
     if 'usuario_id' not in session:
@@ -298,9 +381,57 @@ def otras_contribuciones():
 
 @desempeno_bp.route('/analisis_organizacional')
 def analisis_organizacional():
-    usuario = session.get('usuario')
-    return render_template('analisis_organizacional.html', usuario=usuario)
+    if 'usuario_id' not in session:
+        return redirect(url_for('usuarios_bp.login'))
 
+    usuario = Usuario.query.get(session['usuario_id'])
+    dimensiones = Dimension.query.all()
+
+    return render_template(
+        'analisis_organizacional.html',
+        usuario=usuario,
+        dimensiones=dimensiones
+    )
+
+
+
+##################################################
+@desempeno_bp.route('/colaborador/<int:usuario_id>/dimension/<int:dimension_id>', methods=['GET', 'POST'])
+def formulario_dimension(usuario_id, dimension_id):
+    usuario = Usuario.query.get_or_404(usuario_id)
+    dimension = Dimension.query.get_or_404(dimension_id)
+
+    # usa otro nombre para evitar conflicto con el modelo
+    preguntas_raw = db.session.query(DimensionPregunta).filter_by(id_dimension=dimension_id).all()
+
+    for dp in preguntas_raw:
+        dp.pregunta = Pregunta.query.get(dp.id_pregunta)
+        dp.pregunta.respuestas = Respuesta.query.filter_by(pregunta_id=dp.pregunta.id).all()
+
+    if request.method == 'POST':
+        for dp in preguntas_raw:
+            respuesta_id = request.form.get(f'respuesta_{dp.pregunta.id}')
+            if respuesta_id:
+                guardado = RespuestaDimension(
+                    id_usuario=usuario.id,
+                    id_dimension=dimension.id,
+                    id_pregunta=dp.pregunta.id,
+                    id_respuesta=int(respuesta_id),
+                    fecha_respuesta=date.today()
+                )
+                db.session.add(guardado)
+        db.session.commit()
+        flash('Respuestas guardadas correctamente', 'success')
+        return redirect(url_for('desempeno_bp.analisis_organizacional'))
+
+    return render_template(
+        'formulario_dimension.html',
+        usuario=usuario,
+        dimension=dimension,
+        preguntas=preguntas_raw
+    )
+
+#####################################################
 @desempeno_bp.route('/propositos/estrategico/<int:proyecto_id>')
 def detalle_proyecto_estrategico(proyecto_id):
     if 'usuario_id' not in session:
@@ -316,4 +447,12 @@ def detalle_proyecto_estrategico(proyecto_id):
         proyecto=proyecto,
         microproyectos=microproyectos
     )
+
+@desempeno_bp.route('/preguntas_usuario/<int:usuario_id>')
+def preguntas_por_usuario(usuario_id):
+    usuario = Usuario.query.get_or_404(usuario_id)
+    preguntas = Pregunta.query.filter_by(nivel_contribucion_id=usuario.nivel_contribucion_id).all()
+
+    return render_template('preguntas_por_usuario.html', usuario=usuario, preguntas=preguntas)
+
 

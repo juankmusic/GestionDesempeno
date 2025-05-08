@@ -1,33 +1,43 @@
 {% extends 'base.html' %}
-{% block title %}{{ categoria.nombre }}{% endblock %}
+{% block title %}Preguntas por Origen{% endblock %}
 
 {% block content %}
 <div class="container py-4">
-    <h3 class="fw-bold mb-3">{{ categoria.nombre }}</h3>
+    <h3 class="fw-bold mb-3">
+        Preguntas relacionadas con 
+        <span class="text-primary text-uppercase">"{{ origen | replace('_', ' ') }}"</span>
+    </h3>
+
     <p class="text-muted mb-4">
-        Responde las siguientes preguntas para el colaborador <strong>{{ usuario.nombre }}</strong>
+        Responde las siguientes preguntas para el colaborador <strong>{{ usuario.nombre }}</strong>.
     </p>
 
     <form method="POST">
-        {% for dp in preguntas %}
-            <div class="mb-4">
-                <label class="form-label fw-semibold">{{ dp.pregunta.texto }}</label>
+        {% if preguntas %}
+            {% for p in preguntas %}
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">{{ p.texto }}</label>
 
-                {% if dp.pregunta.respuestas %}
-                    <select name="respuesta_{{ dp.pregunta.id }}" class="form-select" required>
-                        <option value="" disabled selected>Selecciona una opción</option>
-                        {% for r in dp.pregunta.respuestas %}
-                            <option value="{{ r.id }}">{{ r.texto }}</option>
-                        {% endfor %}
-                    </select>
-                {% else %}
-                    <div class="text-danger mt-2">
-                        ⚠ Esta pregunta aún no tiene respuestas asociadas.
-                    </div>
-                {% endif %}
+                    {% if p.respuestas %}
+                        <select name="respuesta_{{ p.id }}" class="form-select" required>
+                            <option value="" disabled selected>Selecciona una opción</option>
+                            {% for r in p.respuestas %}
+                                <option value="{{ r.id }}">{{ r.texto }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <div class="text-danger mt-2">
+                            ⚠ Esta pregunta aún no tiene respuestas asociadas.
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">
+                No hay preguntas registradas para este origen.
             </div>
-        {% endfor %}
-        
+        {% endif %}
+
         <div class="mt-4">
             <button type="submit" class="btn btn-primary px-4">Guardar Respuestas</button>
             <a href="{{ url_for('desempeno_bp.contribuciones_individuales') }}" class="btn btn-outline-secondary ms-2">Cancelar</a>

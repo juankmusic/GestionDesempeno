@@ -53,6 +53,16 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <!-- Nuevo campo para Nivel de Contribución -->
+                    <div class="col-md-6">
+                        <label class="form-label">Nivel de Contribución</label>
+                        <select name="nivel_contribucion" class="form-select">
+                            <option value="">Selecciona un nivel de contribución</option>
+                            {% for nivel in niveles_contribucion %}
+                                <option value="{{ nivel.id_nivel }}">{{ nivel.nivel_de_contribucion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 <div class="text-end mt-4">
                     <a href="{{ url_for('usuarios_bp.lista_usuarios') }}" class="btn btn-secondary">Cancelar</a>

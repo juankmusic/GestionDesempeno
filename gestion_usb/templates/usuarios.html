@@ -22,6 +22,7 @@
                     <th>Rol</th>
                     <th>Cargo</th>
                     <th>Equipo</th>
+                    <th>Nivel de Contribución</th> <!-- Nueva columna para el nivel de contribución -->
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -35,6 +36,14 @@
                     <td>{{ usuario.cargo.nombre if usuario.cargo else '-' }}</td>
                     <td>{{ usuario.equipo.nombre if usuario.equipo else '-' }}</td>
                     <td>
+                        <!-- Mostrar el nivel de contribución -->
+                        {% if usuario.nivel_contribucion %}
+                            {{ usuario.nivel_contribucion.nivel_de_contribucion }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
                         <a href="{{ url_for('usuarios_bp.editar_usuario', usuario_id=usuario.id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
                         <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar({{ usuario.id }})">Eliminar</button>
                     </td>
@@ -42,6 +51,9 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <!-- Botón de Volver (al final de la página) -->
+        <button onclick="window.location.href='/dashboard';" class="btn btn-secondary mb-3">Volver</button>
     </div>
 
     <!-- Modal de Confirmación para Eliminar -->
